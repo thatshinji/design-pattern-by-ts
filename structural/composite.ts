@@ -1,7 +1,9 @@
 /**
  * 组合模式
  */
-
+/**
+ * fake code
+ */
 interface Graphic {
   move(x: number, y: number): void
   draw(): void
@@ -68,4 +70,62 @@ class ImageEditor {
      group.add(component)
    })
   }
+}
+
+/**
+ * components
+ */
+
+abstract class Component {
+  protected parent!: Component | null
+
+  public setParent(parent: Component | null) {
+    this.parent = parent
+  }
+
+  public getParent(): Component | null {
+    return this.parent
+  }
+
+  public addComponent(component: Component):void {}
+  public removeComponent(component:Component): void {}
+
+  public isComposite(): boolean {
+    return false
+  }
+  public abstract operation(): string
+}
+
+class Leaf extends Component {
+  operation(): string {
+    return "Leaf";
+  }
+
+}
+
+class Composite extends Component {
+  protected children: Component[] = []
+
+  public add(component: Component) {
+    this.children.push(component)
+    this.setParent(this)
+  }
+
+  public remove(component: Component) {
+    const componentIdx = this.children.indexOf(component)
+    this.children.splice(componentIdx, 1)
+    component.setParent(null)
+  }
+  public isComposite(): boolean {
+    return true
+  }
+
+  operation(): string {
+    const results = []
+    for (const child of this.children) {
+      results.push(child.operation())
+    }
+    return results.join('+')
+  }
+
 }
